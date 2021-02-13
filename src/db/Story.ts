@@ -2,9 +2,13 @@ import {
 		Column,
 		Entity,
 		Index,
+		JoinTable,
+		ManyToMany,
 		PrimaryGeneratedColumn,
 		getRepository,
 } from 'typeorm';
+import Author, { createOrUpdateAuthor } from './Author';
+import normalizeAuthors from '../utils/normalizeAuthors';
 
 @Entity()
 @Index( [ 'guid', 'canonical_url' ], { unique: true } )
@@ -20,23 +24,39 @@ export default class Story {
 
 		@Column( 'text' )
 		title: string;
+
+		@ManyToMany( () => Author, {
+			cascade: true,
+		} )
+		@JoinTable()
+		authors: Author[];
 }
 
-export function createOrUpdateStory( storyInput: Partial<Story> ): Promise<Story> {
-	const repository = getRepository( Story );
+const findOptions = {
+	relations: [ 'authors' ],
+};
 
+export async function createOrUpdateStory( storyInput: Partial<Story> ): Promise<Story> {
+	const repository = getRepository( Story );
 	const story = new Story();
+
+	// Save authors.
+	storyInput.authors = await Promise.all(
+		normalizeAuthors( storyInput.authors )
+			.map( createOrUpdateAuthor )
+	);
+
 	repository.merge( story, storyInput );
 
 	return repository.save( story );
 }
 
 export function getAllStories(): Promise<Story[]> {
-	return getRepository( Story ).find();
+	return getRepository( Story ).find( findOptions );
 }
 
 export function getStory( id: number ): Promise<Story | undefined> {
-	return getRepository( Story ).findOne( id );
+	return getRepository( Story ).findOne( id, findOptions );
 }
 
 export function getStoryByGuidOrUrl( args: {
@@ -48,5 +68,6 @@ export function getStoryByGuidOrUrl( args: {
 	return getRepository( Story )
 		.createQueryBuilder( 'story' )
 		.where( 'story.guid = :guid OR story.canonical_url = :canonical_url', { guid, canonical_url } )
+		.leftJoinAndSelect( 'story.authors', 'author' )
 		.getOne();
 }

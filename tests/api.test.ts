@@ -3,7 +3,9 @@ import supertest from 'supertest';
 import { Connection } from 'typeorm';
 import app from '../src/app';
 import connect from '../src/db';
+import Story from '../src/db/Story';
 import exampleFromPDF from './__fixtures__/exampleFromPDF.json';
+import normalizeAuthors from '../src/utils/normalizeAuthors';
 
 let connection: Connection;
 let server: Server;
@@ -15,8 +17,13 @@ const port = process.env.PORT || 3000;
 const request = supertest( app );
 
 describe( 'API', () => {
-	const { article: { canonical_url, id: guid, title } } = storyInput;
-	const expectedResponse = { canonical_url, id: undefined, guid, title };
+	const { article: { authors, canonical_url, id: guid, title } } = storyInput;
+	const expectedResponse: Partial<Story> = {
+		authors: normalizeAuthors( authors ),
+		canonical_url,
+		guid,
+		title,
+	};
 
 	beforeAll( async () => {
 		// Wait for database to connect.

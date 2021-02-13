@@ -35,8 +35,8 @@ export function getAll(): Promise<Story[]> {
  * POST /stories/
  */
 export async function post ( req: Request ): Promise<Story> {
-	const { article: { canonical_url, id: guid, title } } = req.body;
-	const storyInput: Partial<Story> = { canonical_url, guid, title };
+	const { article: { authors, canonical_url, id: guid, title } } = req.body;
+	const storyInput: Partial<Story> = { authors, canonical_url, guid, title };
 
 	// First check to see if there's already a story matching the id or url.
 	const story = await getStoryByGuidOrUrl( storyInput );

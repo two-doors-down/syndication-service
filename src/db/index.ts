@@ -3,6 +3,7 @@ import {
 	Connection,
 	ConnectionOptions,
 } from 'typeorm';
+import Author from './Author';
 import Story from './Story';
 
 // NOTE: For ease of configuration, hardcoding some defaults that match
@@ -17,6 +18,7 @@ const username = process.env.MYSQL_USER || 'root';
 const options: ConnectionOptions = {
 	database,
 	entities: [
+		Author,
 		Story,
 	],
 	host,
