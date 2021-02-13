@@ -22,6 +22,15 @@ export default class Story {
 		title: string;
 }
 
+export async function createStory( storyInput: Partial<Story> ) {
+	const repository = getRepository( Story );
+
+	const story = new Story();
+	repository.merge( story, storyInput );
+
+	return repository.save( story );
+}
+
 export function getAllStories() {
 	const repository = getRepository( Story );
 
