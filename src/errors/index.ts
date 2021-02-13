@@ -2,8 +2,6 @@ export const INVALID_REQUEST = 'Invalid request';
 export const NOT_FOUND = 'Resource not found';
 
 export function getErrorContext( err: Error ) {
-	console.error( err.name, err.message );
-
 	// 🤔 Probably a better / typed way to inspect errors from TypeORM.
 	if ( 'QueryFailedError' === err.name ) {
 		if ( err.message.includes( 'ER_DUP_ENTRY' ) ) {

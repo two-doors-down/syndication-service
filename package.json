@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node ./dist/index.js",
-    "test": "MYSQL_PORT=3002 PORT=3003 jest"
+    "test": "MYSQL_PORT=3002 SWALLOW_ERRORS=1 PORT=3003 jest"
   },
   "author": "",
   "license": "ISC",

@@ -15,7 +15,6 @@
     "target": "es6"
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/**/*"
   ]
 }

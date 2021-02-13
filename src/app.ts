@@ -30,6 +30,10 @@ app.post( '/stories', wrap( post ) );
 app.use( ( err: Error, _: Request, res: Response, __: NextFunction ) => {
 	const error = getErrorContext( err );
 
+	if ( '1' !== process.env.SWALLOW_ERRORS ) {
+		console.error( err );
+	}
+
 	res.status( error.code ).json( { error } );
 } );
 
