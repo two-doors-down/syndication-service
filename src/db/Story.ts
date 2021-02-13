@@ -22,7 +22,7 @@ export default class Story {
 		title: string;
 }
 
-export async function createStory( storyInput: Partial<Story> ) {
+export function createOrUpdateStory( storyInput: Partial<Story> ): Promise<Story> {
 	const repository = getRepository( Story );
 
 	const story = new Story();
@@ -31,13 +31,22 @@ export async function createStory( storyInput: Partial<Story> ) {
 	return repository.save( story );
 }
 
-export function getAllStories() {
-	const repository = getRepository( Story );
-
-	return repository.find();
+export function getAllStories(): Promise<Story[]> {
+	return getRepository( Story ).find();
 }
 
-export async function getStory( id: number ) {
-	const repository = getRepository( Story );
-	return await repository.findOne( id );
+export function getStory( id: number ): Promise<Story | undefined> {
+	return getRepository( Story ).findOne( id );
+}
+
+export function getStoryByGuidOrUrl( args: {
+	canonical_url?: string,
+	guid?: string,
+} ): Promise<Story | undefined> {
+	const { canonical_url, guid } = args;
+
+	return getRepository( Story )
+		.createQueryBuilder( 'story' )
+		.where( 'story.guid = :guid OR story.canonical_url = :canonical_url', { guid, canonical_url } )
+		.getOne();
 }

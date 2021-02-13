@@ -1,6 +1,11 @@
 import { Request } from 'express';
-import { NOT_FOUND } from '../errors';
-import Story, { createStory, getAllStories, getStory } from '../db/Story';
+import { INVALID_REQUEST, NOT_FOUND } from '../errors';
+import Story, {
+	createOrUpdateStory,
+	getAllStories,
+	getStory,
+	getStoryByGuidOrUrl,
+} from '../db/Story';
 
 /**
  * Get a story by ID.
@@ -29,8 +34,23 @@ export function getAll(): Promise<Story[]> {
  * Create a new story or update an existing one.
  * POST /stories/
  */
-export function post ( req: Request ): Promise<Story> {
+export async function post ( req: Request ): Promise<Story> {
 	const { article: { canonical_url, id: guid, title } } = req.body;
+	const storyInput: Partial<Story> = { canonical_url, guid, title };
 
-	return createStory( { canonical_url, guid, title } );
+	// First check to see if there's already a story matching the id or url.
+	const story = await getStoryByGuidOrUrl( storyInput );
+
+	if ( story ) {
+		// A story was found, but...
+		// "a new id is posted with the same canonical url as an existing record"
+		if ( ! ( story.guid === guid && story.canonical_url === canonical_url ) ) {
+			throw new Error( INVALID_REQUEST );
+		}
+
+		// Set the ID to the database ID so that it will be updated.
+		storyInput.id = story.id;
+	}
+
+	return createOrUpdateStory( storyInput );
 }

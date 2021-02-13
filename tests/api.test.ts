@@ -69,4 +69,36 @@ describe( 'API', () => {
 
 		expect( response.body.data ).toEqual( expectedResponse );
 	} );
+
+	it( 'returns the created story as a single entity', async () => {
+		const response = await request.get( `/stories/${expectedResponse.id}` );
+
+		expect( response.status ).toEqual( 200 );
+		expect( response.body.data ).toEqual( expectedResponse );
+	} );
+
+	it( 'returns the created story in the collection', async () => {
+		const response = await request.get( '/stories/' );
+
+		expect( response.status ).toEqual( 200 );
+		expect( response.body.data ).toEqual( [ expectedResponse ] );
+	} );
+
+	it( 'updates an existing story if it is reposted', async () => {
+		const newTitle = 'UPDATED TITLE';
+		Object.assign( storyInput.article, { title: newTitle } );
+		Object.assign( expectedResponse, { title: newTitle } );
+
+		const response = await request.post( '/stories/' ).send( storyInput );
+
+		expect( response.status ).toEqual( 200 );
+		expect( response.body.data ).toEqual( expectedResponse );
+	} );
+
+	it( 'returns the updated story as a single entity', async () => {
+		const response = await request.get( `/stories/${expectedResponse.id}` );
+
+		expect( response.status ).toEqual( 200 );
+		expect( response.body.data ).toEqual( expectedResponse );
+	} );
 } );
