@@ -4,11 +4,14 @@ import {
 } from 'typeorm';
 import Story from './Story';
 
-const database = process.env.MYSQL_DATABASE;
-const host = process.env.MYSQL_HOST;
-const password = process.env.MYSQL_PASSWORD;
+// NOTE: For ease of configuration, hardcoding some defaults that match
+// docker-compose.yml. Would normally reach for dotenv here but trying to keep
+// things simple.
+const database = process.env.MYSQL_DATABASE || 'test';
+const host = process.env.MYSQL_HOST || 'localhost';
+const password = process.env.MYSQL_PASSWORD || '';
 const port = parseInt( process.env.MYSQL_PORT || '' ) || 3306;
-const username = process.env.MYSQL_USER;
+const username = process.env.MYSQL_USER || 'root';
 
 const options: ConnectionOptions = {
 	database,

@@ -9,14 +9,8 @@ services:
     environment:
       MYSQL_DATABASE: "syndication"
       MYSQL_HOST: "mariadb"
-      MYSQL_PASSWORD: ""
-      MYSQL_PORT: "3306"
-      MYSQL_USER: "root"
       NODE_ENV: "production"
       PORT: "3000"
-    networks:
-      - front
-      - back
     ports:
       - "3000:3000"
   mariadb:
@@ -25,9 +19,13 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "syndication"
       MYSQL_ROOT_PASSWORD: ""
-    networks:
-      - back
-
-networks:
-  front: {}
-  back: {}
+      MYSQL_INITDB_SKIP_TZINFO: 1 # improves startup time
+  mariadb_test:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "test"
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_INITDB_SKIP_TZINFO: 1 # improves startup time
+    ports:
+      - "3002:3306"
