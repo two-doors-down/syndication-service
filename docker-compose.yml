@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  node:
+    build:
+      context: .
+    depends_on:
+      - mariadb
+    environment:
+      MYSQL_DATABASE: "syndication"
+      MYSQL_HOST: "mariadb"
+      MYSQL_PASSWORD: ""
+      MYSQL_PORT: "3306"
+      MYSQL_USER: "root"
+      NODE_ENV: "production"
+      PORT: "3000"
+    networks:
+      - front
+      - back
+    ports:
+      - "3000:3000"
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "syndication"
+      MYSQL_ROOT_PASSWORD: ""
+    networks:
+      - back
+
+networks:
+  front: {}
+  back: {}
