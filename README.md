@@ -114,26 +114,32 @@ same for tags and art.
 
 ## With more time...
 
-I did some minor irregularity detection, but would have liked to do much more,
-with unit test coverage. ”Alerting” is an interesting choice of words. I’m
-logging errors, but could do much more here to make sure that errors are
-regularly formatted and primed for monitoring.
+- I definitely would have loved to ask questions before getting started! I
+  always like to understand the use cases and context to see if there are other
+  improvements I can make in the process of building things out. What other
+  irregularities might exist? What could we do to clean up the data upon
+  ingestion? Who or what will consume this data?
 
-I added end-to-end tests, which provide coverage for the core use cases, but
-could be more extensive—especially more fixtures with different kinds of updates
-and diversity of data. Unit tests are also needed to increase coverage,
-especially at the controller level.
+- I did some minor irregularity detection, but would have liked to do much more,
+  with unit test coverage. ”Alerting” is an interesting choice of words. I’m
+  logging errors, but could do much more here to make sure that errors are
+  regularly formatted and primed for monitoring.
 
-I would have also liked to spend time thinking about how this application would
-be deployed and how to improve the development experience (hot-reloading and
-linting come to mind).
+- I added end-to-end tests, which provide coverage for the core use cases, but
+  could be more extensive—especially more fixtures with different kinds of updates
+  and diversity of data. Unit tests are also needed to increase coverage,
+  especially at the controller level.
 
-I also have to admit that while I completed the actual coding within 3 hours, I
-spent close to an additional hour on this `README`. I consider communication and
-documentation to be an essential part of engineering, so technically I exceeded
-the time limit. I also benefited from having some pieces lying around from other
-projects that I could put to use; without those resources I would not have
-gotten as far.
+- I would have also liked to spend time thinking about how this application would
+  be deployed and how to improve the development experience (hot-reloading and
+  linting come to mind).
+
+- I also have to admit that while I completed the actual coding within 3 hours, I
+  spent close to an additional hour on this `README`. I consider communication and
+  documentation to be an essential part of engineering, so technically I exceeded
+  the time limit. I also benefited from having some pieces lying around from other
+  projects that I could put to use; without those resources I would not have
+  gotten as far.
 
 ## Thanks!
 
