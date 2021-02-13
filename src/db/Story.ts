@@ -25,6 +25,15 @@ export default class Story {
 		@Column( 'text' )
 		title: string;
 
+		@Column( 'text' )
+		dek: string;
+
+		@Column( 'datetime' )
+		published_date: Date;
+
+		@Column( 'int' )
+		word_count: number;
+
 		@ManyToMany( () => Author, {
 			cascade: true,
 		} )
@@ -48,7 +57,10 @@ export async function createOrUpdateStory( storyInput: Partial<Story> ): Promise
 
 	repository.merge( story, storyInput );
 
-	return repository.save( story );
+	await repository.save( story );
+
+	// Find the model (from cache) to get correctly formatted data.
+	return await repository.findOne( story.id, findOptions ) || story;
 }
 
 export function getAllStories(): Promise<Story[]> {

@@ -17,12 +17,26 @@ const port = process.env.PORT || 3000;
 const request = supertest( app );
 
 describe( 'API', () => {
-	const { article: { authors, canonical_url, id: guid, title } } = storyInput;
+	const {
+		article: {
+			authors,
+			canonical_url,
+			dek,
+			id: guid,
+			published_date,
+			title,
+			word_count,
+		},
+	} = storyInput;
+
 	const expectedResponse: Partial<Story> = {
 		authors: normalizeAuthors( authors ),
 		canonical_url,
+		dek,
 		guid,
+		published_date: published_date.replace( /Z$/, '.000Z' ),
 		title,
+		word_count,
 	};
 
 	beforeAll( async () => {
@@ -107,5 +121,14 @@ describe( 'API', () => {
 
 		expect( response.status ).toEqual( 200 );
 		expect( response.body.data ).toEqual( expectedResponse );
+	} );
+
+	it( 'returns 400 if we use a new ID for an existing story', async () => {
+		Object.assign( storyInput.article, { id: 'this-should-not-happen' } );
+
+		const response = await request.post( '/stories/' ).send( storyInput );
+
+		expect( response.status ).toEqual( 400 );
+		expect( response.body.error.message ).toEqual( 'Invalid request' );
 	} );
 } );
