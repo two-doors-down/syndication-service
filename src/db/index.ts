@@ -1,5 +1,6 @@
 import {
 	createConnection,
+	Connection,
 	ConnectionOptions,
 } from 'typeorm';
 import Story from './Story';
@@ -30,8 +31,8 @@ const options: ConnectionOptions = {
 const maxRetries = 15;
 let retries = 0;
 
-export default async function connect () {
-	await createConnection( options )
+export default async function connect ( overrides = {} ): Promise<Connection> {
+	return await createConnection( { ...options, ...overrides } )
 		.catch( err => {
 			if ( retries < maxRetries ) {
 				return new Promise( resolve => {

@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import bodyParser from 'body-parser';
 import express, { NextFunction, Request, Response } from 'express';
 import { get, getAll, post } from './controllers/stories';
+import { getErrorContext } from './errors';
 
 const app = express();
 
@@ -17,7 +18,7 @@ function wrap ( fn: ( req: Request, res: Response, next: NextFunction ) => Promi
 	}
 }
 
-app.get( '/', ( req: Request, res: Response ) => {
+app.get( '/', ( _: Request, res: Response ) => {
 	res.send( '👋' );
 } );
 
@@ -25,5 +26,11 @@ app.get( '/', ( req: Request, res: Response ) => {
 app.get( '/stories', wrap( getAll ) );
 app.get( '/stories/:id(\\d+)', wrap( get ) );
 app.post( '/stories', wrap( post ) );
+
+app.use( ( err: Error, _: Request, res: Response, __: NextFunction ) => {
+	const error = getErrorContext( err );
+
+	res.status( error.code ).json( { error } );
+} );
 
 export default app;
